@@ -95,7 +95,7 @@ public class FriendShipGraph {
 			if (start == end)
 				return 0;
 			else if ((start == -1) || (end == -1)) {
-				System.out.printf("The Person doesn't exist\n");
+				System.out.printf("The Person doesn't exist");
 				return -1;
 			}
 			boolean visited[] = new boolean[graph.VertexCount];
@@ -105,14 +105,14 @@ public class FriendShipGraph {
 			visited[start] = true;
 			queue.add(start);
 			while (!queue.isEmpty()) {
-				int curValue = queue.remove();
+				int curValue = queue.remove();//获取队顶数据并出队
 				int next=0;
 				for ( next = 0; next < graph.VertexList.get(curValue).netWorkSize(); next++) {
-					int curvisit = graph.VertexList.get(curValue).getSocial(next);
+					int curvisit = graph.VertexList.get(curValue).getSocial(next);//获取每一个人在curvalue的社会位置
 					if (!visited[curvisit]) {
 						visited[curvisit] = true;
 						routeMap.put(curvisit, curValue);
-						queue.add(curvisit);
+						queue.add(curvisit);//入队
 					}
 				}
 			}
