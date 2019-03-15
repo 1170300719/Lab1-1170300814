@@ -1,33 +1,29 @@
 package P1;
-/**
- * @version 11
- * @author yanzhao
- *
- */
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.io.IOException;
 public class MagicSquare {
-	static int N = 100;
+	static int number = 100;
 	public static void main (String[] args) {
 		generateMagicSquare(39);//主函数调用generattemagicsquare函数来生成magicsquare
 		boolean a;
-		ArrayList<ArrayList<Integer>> ms = new ArrayList<ArrayList<Integer>>();
-		File file = new File("src/P1/txt/6.txt");//文件位置
-		BufferedReader reader = null;
+		ArrayList<ArrayList<Integer>> tts = new ArrayList<ArrayList<Integer>>();
+		File filename = new File("src/P1/txt/2.txt");//文件位置
+		BufferedReader hello = null;
 		try {
-			reader = new BufferedReader(new FileReader(file));
-			String tempString = null;
+			hello = new BufferedReader(new FileReader(filename));
 			Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");  //正则表达式
-			while (( tempString = reader.readLine()) != null )
+			String mytemp = null;	
+			while (( mytemp = hello.readLine()) != null )
 			{
-				String[] stmp = tempString.split("\t");
+				String[] tt = mytemp.split("\t");
 				ArrayList<Integer> itmp = new ArrayList<Integer>();
-				for ( int i = 0; i < stmp.length; i++ )
+				for ( int i = 0; i < tt.length; i++ )
 				{
 					
-					if ( !pattern.matcher(stmp[i]).matches())//判断非法输入
+					if ( !pattern.matcher(tt[i]).matches())//判断非法输入
 					{
 						System.out.println("存在非法输入!");
 						a= false;
@@ -35,40 +31,42 @@ public class MagicSquare {
 						return;
 					}
 					
-					itmp.add(Integer.valueOf(stmp[i]));
+					itmp.add(Integer.valueOf(tt[i]));
 					
 				}
-				ms.add(itmp);
+				tts.add(itmp);
 			}
-			reader.close();
+			hello.close();
 		}catch (IOException e) {
 			e.printStackTrace();
 		}finally {
-			if ( reader != null ) 
+			if ( hello != null ) 
 			{
 				try 
 				{
-					reader.close();
+					hello.close();
 				}catch(IOException e1) 
 				{
 				}
 			}
 		}
 		
-		int r = ms.size();
-		int vos = 0, c = 0, vor = 0;
+		int r = tts.size();
+		int vos = 0;
+		int  c = 0; 
+		int vorect = 0;
 
-		int[] voc = new int[r];
+		int[] vect = new int[r];
 		for (int i = 0; i < r; i++)
 		{
-			voc[i] = 0;
+			vect[i] = 0;
 		}
 		
 		for ( int i = 0; i < r; i++)
 		{
-			c = ms.get(i).size();
+			c = tts.get(i).size();
 			
-			ArrayList<Integer> row = new ArrayList<Integer>(ms.get(i));
+			ArrayList<Integer> row = new ArrayList<Integer>(tts.get(i));
 			if ( r != c )//判断是否是方阵
 			{
 				System.out.println("不是一个方阵！");
@@ -76,25 +74,25 @@ public class MagicSquare {
 				System.out.println(a);
 				return;
 			}
-			vor = 0;//开始计算行值
+			vorect = 0;//开始计算行值
 			for ( int j = 0; j < c; j ++ )
 			{
-				voc[j] += row.get(j);
-				vor += row.get(j);
+				vect[j] += row.get(j);//累计开始
+				vorect += row.get(j);
 			}
 			if ( i == 0)
 			{
-				vos = vor;
+				vos = vorect;
 			}
 			
-			if ( vor != vos )
+			if ( vorect != vos )
 			{
 				a= false;
 			}
 		}
 		for ( int k = 0; k < c; k++)
 		{
-			if ( voc[k] != vos )//检查列的数量
+			if ( vect[k] != vos )//检查列的数量
 			{
 				a=false;
 			}
@@ -104,19 +102,19 @@ public class MagicSquare {
 		
 		for ( int i = 0; i < r ; i ++ )
 		{
-			vod += ms.get(i).get(i);//检查对角线
+			vod += tts.get(i).get(i);//检查对角线
 		}
 		if ( vod != vos )
 		{
 			a= false;
 		}
 		
-		vod = 0;
+		 int  vod1 = 0;
 		for ( int i = r-1; i > -1 ; i-- )
 		{
-			vod += ms.get(i).get(i);
+			vod1 += tts.get(i).get(i);
 		}
-		if ( vod != vos )
+		if ( vod1 != vos )
 		{
 			a=false;
 		}	

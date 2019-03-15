@@ -1,9 +1,5 @@
 package P3;
-/**
- * 
- * @author yanzhao
- *@version 11
- */
+
 import java.util.*;
 
 
