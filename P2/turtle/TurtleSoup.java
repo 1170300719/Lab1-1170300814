@@ -147,79 +147,80 @@ public class TurtleSoup {
      * @return minimal subset of the input points that form the vertices of the perimeter of the convex hull
      */
     static Set<Point> ans = new HashSet<Point>();
+    public static void fs(List<Point> points, boolean up){
+    	
+    	Collections.sort(points, new Comparator<Point>() {//排序，找x轴最大和最小
+            public int compare(Point o1, Point o2) {
+                return (int) (o1.x() != o2.x() ? o1.x() - o2.x() : o1.y() - o2.y());
+            }
+        });
+    	int fir = 0;
+        int lst = points.size() - 1;
+
+        
+        ans.add(points.get(fir));//加入点集
+        ans.add(points.get(lst));
+
+
+        if (points.size() == 2)//点集里面有两个点的话就返回
+            return;
+
+        boolean isLine = true;
+        for (int i = 0; i < points.size(); i++) {
+            if (i == fir || i == lst)
+                continue;
+            if (calcuTriangle(points.get(fir), points.get(lst), points.get(i)) != 0) {//判断是否构成一个三角形
+                isLine = false;//不是直线
+                break;
+            }
+        }
+        
+        if (isLine) {
+            return;
+        }
+
+      
+        int maxIndex = -1;
+        double max = 0;
+        for (int i = 0; i < points.size(); i++) {
+            if (i == fir || i == lst)
+                continue;
+            
+            if (up && calcuTriangle(points.get(fir), points.get(lst), points.get(i)) > max) {//上凸包计算
+                maxIndex = i;
+                max = calcuTriangle(points.get(fir), points.get(lst), points.get(i));
+            }
+            
+            if (!up && -calcuTriangle(points.get(fir), points.get(lst), points.get(i)) > max) {//下图包计算
+                maxIndex = i;
+                max = -calcuTriangle(points.get(fir), points.get(lst), points.get(i));
+            }
+        }
+
+        
+        if (maxIndex == -1) {//找不到就返回
+            return;
+        }
+
+        
+        List<Point> c1 = new ArrayList<>();//开始分成小问题
+        split(fir, maxIndex, points, c1, up);
+        fs(c1,up);
+
+        List<Point> c2 = new ArrayList<>();
+        split(maxIndex, lst, points, c2, up);
+        fs(c2,up);
+    }
+
     public static Set<Point> convexHull(Set<Point> points) {
     	//采用了递归的方法分成了小问题来计算凸包问题。
         	if ( points.size() <= 2 )//如果点的数量小于2就是直接返回
         		return points;
         	List<Point> ps = new ArrayList<Point>(points);
-        	ch(ps,true);//上图包的计算       	
-        	ch(ps,false);//下图包的计算
+        	fs(ps,true);//上图包的计算       	
+        	fs(ps,false);//下图包的计算
         	return ans;
         }       
-        public static void ch(List<Point> points, boolean up){
-        	
-        	Collections.sort(points, new Comparator<Point>() {//排序，找x轴最大和最小
-                public int compare(Point o1, Point o2) {
-                    return (int) (o1.x() != o2.x() ? o1.x() - o2.x() : o1.y() - o2.y());
-                }
-            });
-        	int fir = 0;
-            int lst = points.size() - 1;
-
-            
-            ans.add(points.get(fir));//加入点集
-            ans.add(points.get(lst));
-
-
-            if (points.size() == 2)//点集里面有两个点的话就返回
-                return;
-
-            boolean isLine = true;
-            for (int i = 0; i < points.size(); i++) {
-                if (i == fir || i == lst)
-                    continue;
-                if (calcuTriangle(points.get(fir), points.get(lst), points.get(i)) != 0) {//判断是否构成一个三角形
-                    isLine = false;//不是直线
-                    break;
-                }
-            }
-            
-            if (isLine) {
-                return;
-            }
-
-          
-            int maxIndex = -1;
-            double max = 0;
-            for (int i = 0; i < points.size(); i++) {
-                if (i == fir || i == lst)
-                    continue;
-                
-                if (up && calcuTriangle(points.get(fir), points.get(lst), points.get(i)) > max) {//上凸包计算
-                    maxIndex = i;
-                    max = calcuTriangle(points.get(fir), points.get(lst), points.get(i));
-                }
-                
-                if (!up && -calcuTriangle(points.get(fir), points.get(lst), points.get(i)) > max) {//下图包计算
-                    maxIndex = i;
-                    max = -calcuTriangle(points.get(fir), points.get(lst), points.get(i));
-                }
-            }
-
-            
-            if (maxIndex == -1) {//找不到就返回
-                return;
-            }
-
-            
-            List<Point> c1 = new ArrayList<>();//开始分成小问题
-            split(fir, maxIndex, points, c1, up);
-            ch(c1,up);
-
-            List<Point> c2 = new ArrayList<>();
-            split(maxIndex, lst, points, c2, up);
-            ch(c2,up);
-        }
 
        
         private static void split(int a1, int a2, List<Point> points, List<Point> part, boolean up) {//分成小问题
