@@ -122,5 +122,47 @@ public class SocialNetwork {
         }
         return influence;
     }
+    public static Map<String, Set<String>> getSmarter(List<Tweet> tweets) {
+    	String name=null;
+    	String[] word=null;
+    	Map<String, Set<String>> followMap = guessFollowsGraph(tweets);
+		Map<String, Set<String>> RTMap = new HashMap<>();
+        for(Tweet onlyuser: tweets)
+        {
+        	word=onlyuser.getText().split("[^0-9a-zA-Z-_@]");
+        	for(String hi:word)
+        	{
+        		if(hi.startsWith("@")&&hi.length()>1)
+        		{
+        			name=hi.substring(1);
+        			for(Tweet user: tweets)
+        			{
+        				if(RTMap.containsKey(user.getAuthor()))
+        				{
+        					RTMap.get(user.getAuthor()).add(name);
+        				}
+        				else {
+							Set<String>  tt=new HashSet<>();
+							tt.add(name);
+							RTMap.put(user.getAuthor(),tt);
+						}
+        			}
+        			}
+        		}
+    }
+        for(String username:followMap.keySet())
+        {
+        	Set<String> followers=new HashSet<String>();
+        	followers=followMap.get(username);
+        	for(String ttt:followers)
+        	{
+        	if(RTMap.containsKey(ttt))
+        	{
+        		followMap.get(username).addAll(RTMap.get(ttt));
+        	}
+        }
+        }
+        return followMap;
+    }
 
 }
