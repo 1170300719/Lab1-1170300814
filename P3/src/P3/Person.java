@@ -13,10 +13,6 @@ public final class Person {//一些辅助方法
 		this.SocialList.add(personPosition);
 	}
 	
-	public String getTheName() 
-	{
-		return this.name;
-	}
 	
 	public int netWorkSize() 
 	{

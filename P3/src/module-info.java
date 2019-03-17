@@ -6,4 +6,5 @@
  *
  */
 module P3 {
+	requires junit;
 }
